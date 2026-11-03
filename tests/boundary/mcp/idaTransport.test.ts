@@ -302,7 +302,8 @@ process.stdin.on("data", (chunk) => {
       mode: "attached",
       timeoutMs: 10_000,
     },
-    {},
+    // Windows Node needs SystemRoot to initialize its cryptographic runtime.
+    process.platform === "win32" ? { SystemRoot: process.env.SystemRoot } : {},
   );
   cleanups.push(() => connection.close());
   expect(await connection.connect()).toEqual(["list_strings"]);
